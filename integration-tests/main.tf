@@ -1,11 +1,11 @@
 # Testing resource group module
 
 module "resource_group" {
-  source = "../"
+  source              = "../"
   resource_group_name = "traindevsecops"
-  location = "West Europe"
+  location            = "West Europe"
   tags = {
     project = "traindevsecops"
-    env = "demo"
+    env     = "demo"
   }
-  }
+}
