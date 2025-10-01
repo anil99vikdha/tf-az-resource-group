@@ -90,6 +90,11 @@
       - name: Show Working Directory
         run: pwd && ls -la
 
+      - name: List repo root files
+        run: ls -la
+
+      - name: List module folder ../..
+        run: ls -la ../..
 
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
