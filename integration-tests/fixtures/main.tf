@@ -1,7 +1,7 @@
 # Testing resource group module..
 
 module "az_rg" {
-  source = "../module"
+  source = "../../module"
   #source              = "git::https://github.com/anil99vikdha/tf-az-resource-group//"
   #source              = "/home/runner/work/tf-az-resource-group/tf-az-resource-group"
   resource_group_name = "traindevsecops"
