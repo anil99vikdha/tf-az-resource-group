@@ -1,4 +1,4 @@
-# Configure the Microsoft Azure Provider
+# Configure the Microsoft Azure Provider config
 provider "azurerm" {
   features {}
   use_oidc = true
