@@ -1,6 +1,6 @@
 # Testing resource group module
 
-module "resource_group" {
+module "az_rg" {
   source              = "../.."
   resource_group_name = "traindevsecops"
   location            = "West Europe"
