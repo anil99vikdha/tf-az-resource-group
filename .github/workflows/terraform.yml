@@ -62,7 +62,7 @@
       defaults:
         run:
           shell: bash
-          working-directory: integration-tests
+          working-directory: tests
 
       steps:
       # Checkout the repository to the GitHub Actions runner
