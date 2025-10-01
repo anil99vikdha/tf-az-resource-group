@@ -76,7 +76,7 @@ jobs:
         echo "Listing current directory:"
         ls -la
         echo "Listing root directory (../.. from working dir):"
-        ls -la ../..
+        ls -la ../../module
 
     - name: Setup Terraform CLI
       uses: hashicorp/setup-terraform@v2
