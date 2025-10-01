@@ -10,7 +10,7 @@ terraform {
     organization = "traindevsecops"
 
     workspaces {
-      name = "azresourcegroup"
+      name = "tf-azure-resource-group"
     }
   }
 }
