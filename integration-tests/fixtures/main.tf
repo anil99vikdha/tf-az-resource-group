@@ -2,7 +2,7 @@
 
 module "az_rg" {
   #source              = "../.."
-  source = "git::https://github.com/anil99vikdha/tf-az-resource-group//"
+  source              = "git::https://github.com/anil99vikdha/tf-az-resource-group//"
   resource_group_name = "traindevsecops"
   location            = "West Europe"
   tags = {
