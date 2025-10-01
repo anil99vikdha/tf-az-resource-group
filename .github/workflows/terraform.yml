@@ -94,5 +94,5 @@ jobs:
     - name: Terraform Destroy (run conditionally if needed)
       # You may trigger this using PR comment commands or labels
       # Simple example: destroy on PR close/label can be separate workflow
-      if: false   # disable by default
+      #if: false   # disable by default
       run: terraform destroy -auto-approve -input=false
