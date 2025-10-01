@@ -1,4 +1,4 @@
-# Testing resource group module..
+# Testing resource group module.
 
 module "az_rg" {
   #source              = "../.."
