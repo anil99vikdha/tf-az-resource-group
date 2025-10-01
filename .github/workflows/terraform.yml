@@ -75,6 +75,13 @@
         with:
           cli_config_credentials_token: ${{ secrets.TFAZRESOURCEGROUPTOKEN }}
 
+      -name: Remove .terraform
+       run: rm -rf .terraform
+
+      -name: Remove lock file
+       run: rm -rf .terraform.lock.hcl
+
+      
       # Refresh the module source as Terraform caches module locally
       - name: Terraform get update
         run: terraform get -update
