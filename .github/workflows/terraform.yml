@@ -75,6 +75,10 @@
         with:
           cli_config_credentials_token: ${{ secrets.TFAZRESOURCEGROUPTOKEN }}
 
+      # Refresh the module source as Terraform caches module locally
+      - name: Terraform get update
+        run: terraform get -update  
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform init
