@@ -77,7 +77,7 @@
 
       # Refresh the module source as Terraform caches module locally
       - name: Remove lock file
-        run: m -rf .terraform.lock.hcl
+        run: rm -rf .terraform.lock.hcl
 
       # Refresh the module source as Terraform caches module locally
       - name: Remove .terraform
