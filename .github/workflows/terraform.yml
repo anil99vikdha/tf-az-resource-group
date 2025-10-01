@@ -42,26 +42,27 @@
 #       with:
 #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-name: 'Terraform Integration Testing'
+name: 'Terraform Plan, Apply and Destroy on PR'
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - '**'   # all branches PRs
 
 permissions:
   contents: read
 
 jobs:
   terraform:
-    name: 'Terraform'
+    name: 'Terraform PR Lifecycle'
     runs-on: ubuntu-latest
     environment: dev
 
     defaults:
       run:
         shell: bash
-        working-directory: integration-tests/fixtures  # Your Terraform root caller
+        working-directory: integration-tests/fixtures
 
     steps:
     - name: Checkout
@@ -74,9 +75,8 @@ jobs:
       with:
         cli_config_credentials_token: ${{ secrets.TFAZRESOURCEGROUPTOKEN }}
 
-    - name: Remove local Terraform cache files
-      run: |
-        rm -rf .terraform.lock.hcl .terraform
+    - name: Clean Terraform cache
+      run: rm -rf .terraform.lock.hcl .terraform
 
     - name: Terraform Init
       run: terraform init
@@ -87,10 +87,12 @@ jobs:
     - name: Terraform Plan
       run: terraform plan -input=false
 
-    - name: Terraform Apply (main branch pushes only)
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    - name: Terraform Apply (on PR open/synchronize only - use with caution)
+      # OPTIONAL: Remove or comment to avoid auto apply on PRs
       run: terraform apply -auto-approve -input=false
 
-    - name: Terraform Destroy (manual workflow dispatch only)
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    - name: Terraform Destroy (run conditionally if needed)
+      # You may trigger this using PR comment commands or labels
+      # Simple example: destroy on PR close/label can be separate workflow
+      if: false   # disable by default
       run: terraform destroy -auto-approve -input=false
