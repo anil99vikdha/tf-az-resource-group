@@ -42,74 +42,61 @@
 #       with:
 #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-  name: 'Terraform Integration Testing'
+name: 'Terraform Integration Testing'
 
-  on:
-    push:
-      branches: [ "main" ]
-    pull_request:
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
 
-  permissions:
-    contents: read
+permissions:
+  contents: read
 
-  jobs:
-    terraform:
-      name: 'Terraform'
-      runs-on: ubuntu-latest
-      environment: dev
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: dev
 
-      # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-      defaults:
-        run:
-          shell: bash
-          working-directory: integration-tests/fixtures
+    defaults:
+      run:
+        shell: bash
+        working-directory: integration-tests/fixtures  # Your Terraform root caller
 
-      steps:
-      # Checkout the repository to the GitHub Actions runner
-      - name: Checkout
-        uses: actions/checkout@v4
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          cli_config_credentials_token: ${{ secrets.TFAZRESOURCEGROUPTOKEN }}
+    - name: Show repo structure at root and working dir
+      run: |
+        echo "Working directory:"
+        pwd
+        echo "Listing current directory:"
+        ls -la
+        echo "Listing root directory (../.. from working dir):"
+        ls -la ../..
 
-      # Refresh the module source as Terraform caches module locally
-      - name: Remove lock file
-        run: rm -rf .terraform.lock.hcl
+    - name: Setup Terraform CLI
+      uses: hashicorp/setup-terraform@v2
+      with:
+        cli_config_credentials_token: ${{ secrets.TFAZRESOURCEGROUPTOKEN }}
 
-      # Refresh the module source as Terraform caches module locally
-      - name: Remove .terraform
-        run: rm -rf .terraform
-      
-      # Refresh the module source as Terraform caches module locally
-      - name: Terraform get update
-        run: terraform get -update
+    - name: Remove local Terraform cache files
+      run: |
+        rm -rf .terraform.lock.hcl .terraform
 
-      - name: Show Working Directory
-        run: pwd && ls -la
+    - name: Terraform get update to refresh module source
+      run: terraform get -update
 
-      - name: List repo root files
-        run: ls -la
+    - name: Terraform Init
+      run: terraform init
 
-      - name: List module folder ../..
-        run: ls -la ../..
+    - name: Terraform Format Check
+      run: terraform fmt -check
 
-      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-      - name: Terraform Init
-        run: terraform init
+    - name: Terraform Plan
+      run: terraform plan -input=false
 
-      # Checks that all Terraform configuration files adhere to a canonical format
-      - name: Terraform Format
-        run: terraform fmt -check
-
-      # Generates an execution plan for Terraform
-      - name: Terraform Plan
-        run: terraform plan -input=false
-
-        # On push to "main", build or change infrastructure according to Terraform configuration files
-        # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
+    - name: Terraform Apply (main branch pushes only)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
