@@ -90,3 +90,7 @@ jobs:
     - name: Terraform Apply (main branch pushes only)
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
+
+    - name: Terraform Destroy (manual workflow dispatch only)
+      if: github.event_name == 'workflow_dispatch'
+      run: terraform destroy -auto-approve -input=false
