@@ -6,7 +6,7 @@ module "az_rg" {
   resource_group_name = "traindevsecops"
   location            = "West Europe"
   tags = {
-    project = "traindevsecops"
+    project = "traindevsecops01"
     env     = "demo"
   }
 }
